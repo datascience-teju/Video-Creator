@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Local Video Studio</title>
+  <link rel="stylesheet" href="styles/main.css">
+  <link rel="stylesheet" href="styles/timeline.css">
+</head>
+<body>
+
+  <!-- SVG Gradient definitions -->
+  <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#00f2fe" />
+        <stop offset="100%" stop-color="#4facfe" />
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <!-- TOP HEADER -->
+  <header class="top-header">
+    <div class="logo-section">
+      <div class="capcut-logo">
+        <svg viewBox="0 0 24 24">
+          <path d="M19 4h-2l-3.5 6L17 16h2V4zM5 20h2l3.5-6L7 8H5v12zM9.5 12L6.7 7.2 8.4 4.2 13 12l-4.6 7.8-1.7-3L9.5 12z"/>
+        </svg>
+        <span>Local Studio</span>
+      </div>
+      <input type="text" id="projectTitleInput" class="project-title-input" value="My Viral Edit" title="Click to rename project" />
+
+      <!-- Backend Status Indicator -->
+      <div id="backendStatusBadge" style="display: flex; align-items: center; gap: 6px; font-size: 11px; padding: 3px 8px; border-radius: 12px; background: rgba(6, 214, 160, 0.15); color: #06d6a0; border: 1px solid rgba(6, 214, 160, 0.3);">
+        <span style="display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #06d6a0; box-shadow: 0 0 6px #06d6a0;"></span>
+        <span id="backendStatusText">Local backend starting...</span>
+      </div>
+    </div>
+
+    <div class="header-center-tools">
+      <!-- Aspect Ratio Switcher -->
+      <div class="aspect-ratio-selector">
+        <span>Aspect:</span>
+        <select id="aspectRatioSelect">
+          <option value="16:9">16:9 (YouTube / Landscape)</option>
+          <option value="9:16">9:16 (TikTok / Reels / Shorts)</option>
+          <option value="1:1">1:1 (Instagram Square)</option>
+          <option value="4:5">4:5 (Portrait Feed)</option>
+          <option value="21:9">21:9 (Cinematic)</option>
+        </select>
+      </div>
+
+      <!-- Safe Zones toggle -->
+      <button class="header-btn" id="btnToggleSafeZones" title="Toggle 9:16 Safe Zone Guidelines">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+          <path d="M3 5v4h2V5h4V3H5c-1.1 0-2 .9-2 2zm2 10H3v4c0 1.1.9 2 2 2h4v-2H5v-4zm14 4h-4v2h4c1.1 0 2-.9 2-2v-4h-2v4zm0-16h-4v2h4v4h2V5c0-1.1-.9-2-2-2z"/>
+        </svg>
+        <span>Safe Zones</span>
+      </button>
+
+      <!-- Save Project Button -->
+      <button class="header-btn" id="btnSaveProject" title="Save Project (Ctrl+S)">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
+        <span>Save</span>
+      </button>
+
+      <!-- Load Project Button -->
+      <button class="header-btn" id="btnLoadProject" title="Open Project">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+        <span>Projects</span>
+      </button>
+    </div>
+
+    <div class="header-right">
+      <button class="btn-export" id="btnExportVideo">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+          <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+        </svg>
+        <span>Export</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN WORKSPACE -->
+  <div class="main-workspace">
+    <!-- LEFT SIDEBAR NAV -->
+    <nav class="sidebar-nav">
+      <button class="nav-tab active" data-target="pane-media">
+        <svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8 12.5v-9l6 4.5-6 4.5z"/></svg>
+        <span>Media</span>
+      </button>
+      <button class="nav-tab" data-target="pane-audio">
+        <svg viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+        <span>Audio</span>
+      </button>
+      <button class="nav-tab" data-target="pane-text">
+        <svg viewBox="0 0 24 24"><path d="M5 4v3h5.5v12h3V7H19V4z"/></svg>
+        <span>Text / TTS</span>
+      </button>
+      <button class="nav-tab" data-target="pane-stickers">
+        <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/></svg>
+        <span>Stickers</span>
+      </button>
+      <button class="nav-tab" data-target="pane-effects">
+        <svg viewBox="0 0 24 24"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg>
+        <span>Effects</span>
+      </button>
+      <button class="nav-tab" data-target="pane-filters">
+        <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/></svg>
+        <span>Filters</span>
+      </button>
+      <button class="nav-tab" data-target="pane-adjust">
+        <svg viewBox="0 0 24 24"><path d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z"/></svg>
+        <span>Adjust</span>
+      </button>
+    </nav>
+
+    <!-- EXPANDED SIDEBAR DRAWER -->
+    <div class="sidebar-content">
+      <div class="sidebar-header">
+        <span class="sidebar-title" id="sidebarTitle">Media Library</span>
+      </div>
+      <div class="sidebar-body">
+
+        <!-- TAB: MEDIA -->
+        <div class="tab-pane active" id="pane-media">
+          <div class="upload-dropzone" id="uploadDropzone">
+            <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
+            <div class="upload-title">Import Video, Audio, or Images</div>
+            <div class="upload-subtitle">Files are processed & stored by backend</div>
+            <input type="file" id="fileUploadInput" multiple accept="video/*,audio/*,image/*" style="display: none;" />
+          </div>
+
+          <div class="section-title">Project Clips</div>
+          <div class="asset-grid" id="assetLibraryGrid"></div>
+        </div>
+
+        <!-- TAB: AUDIO -->
+        <div class="tab-pane" id="pane-audio">
+          <div class="section-title">Soundtracks & SFX</div>
+          <div class="asset-grid" id="audioLibraryGrid"></div>
+        </div>
+
+        <!-- TAB: TEXT & SPEECH -->
+        <div class="tab-pane" id="pane-text">
+          <!-- Offline TTS Generator -->
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; display: flex; flex-direction: column; gap: 8px;">
+            <div style="font-size: 12px; font-weight: 700; color: var(--accent-cyan); display: flex; align-items: center; gap: 6px;">
+              <span>🔊</span> Offline Text-To-Speech Voiceover
+            </div>
+            <textarea id="ttsTextInput" class="control-textarea" rows="2" placeholder="Type text to speak (e.g. Subscribe for part two!)..."></textarea>
+
+            <div class="control-row">
+              <span class="control-label" style="font-size: 11px;">Voice</span>
+              <select id="ttsVoiceSelect" class="control-select" style="max-width: 140px;">
+                <option value="0">David (Male)</option>
+                <option value="1">Zira (Female)</option>
+              </select>
+            </div>
+
+            <div class="control-row">
+              <span class="control-label" style="font-size: 11px;">Rate</span>
+              <input type="range" id="ttsRateSlider" class="control-slider" min="-5" max="5" value="0">
+            </div>
+
+            <button id="btnGenerateTTS" class="btn-export" style="padding: 6px 12px; font-size: 11px; justify-content: center; margin-top: 4px;">
+              Generate Voiceover
+            </button>
+          </div>
+
+          <div class="section-title" style="margin-top: 8px;">Title Presets & Captions</div>
+          <div class="presets-grid" id="textPresetsGrid"></div>
+        </div>
+
+        <!-- TAB: STICKERS -->
+        <div class="tab-pane" id="pane-stickers">
+          <div id="stickersGrid"></div>
+        </div>
+
+        <!-- TAB: EFFECTS -->
+        <div class="tab-pane" id="pane-effects">
+          <div class="section-title">Special FX</div>
+          <div class="presets-grid" id="effectsGrid"></div>
+        </div>
+
+        <!-- TAB: FILTERS -->
+        <div class="tab-pane" id="pane-filters">
+          <div class="section-title">Color Grading</div>
+          <div class="presets-grid" id="filtersGrid"></div>
+        </div>
+
+        <!-- TAB: ADJUSTMENTS -->
+        <div class="tab-pane" id="pane-adjust">
+          <div class="section-title">Color Controls</div>
+          <div class="control-row">
+            <span class="control-label">Brightness</span>
+            <div class="control-input-group">
+              <input type="range" class="control-slider" id="adj_brightness" min="50" max="150" value="100">
+              <span id="adj_brightness_num" class="control-number">100</span>
+            </div>
+          </div>
+          <div class="control-row">
+            <span class="control-label">Contrast</span>
+            <div class="control-input-group">
+              <input type="range" class="control-slider" id="adj_contrast" min="50" max="200" value="100">
+              <span id="adj_contrast_num" class="control-number">100</span>
+            </div>
+          </div>
+          <div class="control-row">
+            <span class="control-label">Saturation</span>
+            <div class="control-input-group">
+              <input type="range" class="control-slider" id="adj_saturation" min="0" max="250" value="100">
+              <span id="adj_saturation_num" class="control-number">100</span>
+            </div>
+          </div>
+          <div class="control-row">
+            <span class="control-label">Hue Rotate</span>
+            <div class="control-input-group">
+              <input type="range" class="control-slider" id="adj_hue" min="-180" max="180" value="0">
+              <span id="adj_hue_num" class="control-number">0</span>
+            </div>
+          </div>
+          <div class="control-row">
+            <span class="control-label">Blur</span>
+            <div class="control-input-group">
+              <input type="range" class="control-slider" id="adj_blur" min="0" max="15" value="0">
+              <span id="adj_blur_num" class="control-number">0</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- CENTER PREVIEW AREA -->
+    <main class="preview-area">
+      <div class="preview-container">
+        <div class="canvas-wrapper">
+          <canvas id="previewCanvas" width="1280" height="720"></canvas>
+        </div>
+      </div>
+
+      <!-- TRANSPORT BAR -->
+      <div class="preview-transport">
+        <div class="timecode-display">
+          <span id="timecodeCurrent">00:00:00</span> / <span id="timecodeTotal" class="timecode-total">00:10:00</span>
+        </div>
+
+        <div class="transport-controls">
+          <button class="transport-btn" id="btnRewind" title="Jump to Beginning (Home)">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M11 18V6l-8.5 6 8.5 6zm.5-6l8.5 6V6l-8.5 6z"/></svg>
+          </button>
+          <button class="transport-btn" id="btnStepBack" title="Step Back 1 Frame (Left Arrow)">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+          </button>
+          <button class="transport-btn btn-play" id="btnPlay" title="Play / Pause (Space)">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          </button>
+          <button class="transport-btn" id="btnStepForward" title="Step Forward 1 Frame (Right Arrow)">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+          </button>
+        </div>
+
+        <div class="transport-extra"></div>
+      </div>
+    </main>
+
+    <!-- RIGHT INSPECTOR PANEL -->
+    <aside class="inspector-panel">
+      <div class="inspector-header">
+        <span>Clip Inspector</span>
+      </div>
+      <div class="inspector-body">
+
+        <div id="inspectorEmptyState" style="color: var(--text-muted); font-size: 12px; text-align: center; margin-top: 40px;">
+          Select a clip in the timeline below to inspect and customize its properties.
+        </div>
+
+        <!-- VIDEO & VISUAL INSPECTOR -->
+        <div id="inspectorVideoSection" class="inspector-section" style="display: none;">
+          <div class="section-title">Transform & Motion</div>
+          <div class="control-row">
+            <span class="control-label">Scale</span>
+            <div class="control-input-group">
+              <input type="range" class="control-slider" id="inspectorScale" min="0.2" max="3" step="0.05" value="1">
+              <input type="number" class="control-number" id="inspectorScaleNum" value="1" step="0.1">
+            </div>
+          </div>
+          <div class="control-row">
+            <span class="control-label">Rotation</span>
+            <div class="control-input-group">
+              <input type="range" class="control-slider" id="inspectorRotation" min="-180" max="180" value="0">
+              <input type="number" class="control-number" id="inspectorRotationNum" value="0">
+            </div>
+          </div>
+          <div class="control-row">
+            <span class="control-label">Opacity</span>
+            <div class="control-input-group">
+              <input type="range" class="control-slider" id="inspectorOpacity" min="0" max="1" step="0.05" value="1">
+              <input type="number" class="control-number" id="inspectorOpacityNum" value="1" step="0.1">
+            </div>
+          </div>
+
+          <div class="section-title" style="margin-top: 12px;">Playback & Audio</div>
+          <div class="control-row">
+            <span class="control-label">Speed</span>
+            <div class="control-input-group">
+              <input type="range" class="control-slider" id="inspectorSpeed" min="0.25" max="4" step="0.25" value="1">
+              <input type="number" class="control-number" id="inspectorSpeedNum" value="1" step="0.25">
+            </div>
+          </div>
+          <div class="control-row">
+            <span class="control-label">Volume</span>
+            <div class="control-input-group">
+              <input type="range" class="control-slider" id="inspectorVolume" min="0" max="2" step="0.1" value="1">
+              <input type="number" class="control-number" id="inspectorVolumeNum" value="1" step="0.1">
+            </div>
+          </div>
+
+          <!-- Audio Separation Tool -->
+          <button id="btnExtractAudio" class="header-btn" style="background: var(--bg-card); border: 1px solid var(--border-color); width: 100%; justify-content: center; margin-top: 8px;">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+            <span>Separate Audio into Track</span>
+          </button>
+        </div>
+
+        <!-- TEXT INSPECTOR -->
+        <div id="inspectorTextSection" class="inspector-section" style="display: none;">
+          <div class="section-title">Text Content</div>
+          <textarea id="inspectorTextContent" class="control-textarea" rows="2"></textarea>
+
+          <div class="section-title" style="margin-top: 10px;">Typography & Style</div>
+          <div class="control-row">
+            <span class="control-label">Text Color</span>
+            <input type="color" id="inspectorTextColor" class="color-picker-input" value="#00f2fe">
+          </div>
+          <div class="control-row">
+            <span class="control-label">Outline Color</span>
+            <input type="color" id="inspectorStrokeColor" class="color-picker-input" value="#000000">
+          </div>
+        </div>
+
+      </div>
+    </aside>
+  </div>
+
+  <!-- BOTTOM TIMELINE PANEL -->
+  <section class="timeline-panel" id="timelineContainer">
+    <!-- TIMELINE ACTION TOOLBAR -->
+    <div class="timeline-actions-bar">
+      <div class="timeline-left-actions">
+        <button class="tool-action-btn" id="btnSplitClip" title="Split Clip at Playhead (S or Ctrl+B)">
+          <svg viewBox="0 0 24 24"><path d="M9 3L5 6.99h3V14H5l4 4 4-4h-3V6.99h3L9 3zm6 14.01V10h3l-4-4-4 4h3v7.01h-3l4 4 4-4h-3z"/></svg>
+          <span>Split</span>
+        </button>
+        <button class="tool-action-btn" id="btnDeleteClip" title="Delete Selected Clip (Del / Backspace)">
+          <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+          <span>Delete</span>
+        </button>
+        <button class="tool-action-btn" id="btnDuplicateClip" title="Duplicate Clip (Ctrl+D)">
+          <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+          <span>Duplicate</span>
+        </button>
+      </div>
+
+      <div class="timeline-right-actions">
+        <div class="zoom-control">
+          <button class="tool-action-btn" id="btnZoomOut" title="Zoom Out Timeline (-)">−</button>
+          <span>Zoom</span>
+          <button class="tool-action-btn" id="btnZoomIn" title="Zoom In Timeline (+)">+</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TIMELINE TRACKS SCROLL CONTAINER -->
+    <div class="timeline-scroll-container">
+      <!-- TIME RULER -->
+      <div class="timeline-ruler-wrapper">
+        <div class="ruler-header-spacer"></div>
+        <canvas id="rulerCanvas" class="timeline-ruler-canvas" height="28"></canvas>
+      </div>
+
+      <!-- TRACKS BODY -->
+      <div class="timeline-body">
+        <!-- TRACK HEADERS -->
+        <div class="track-headers-column">
+          <div class="track-header"><span class="track-name">Text</span></div>
+          <div class="track-header"><span class="track-name">Stickers</span></div>
+          <div class="track-header"><span class="track-name">Overlay</span></div>
+          <div class="track-header"><span class="track-name">Main Video</span></div>
+          <div class="track-header"><span class="track-name">Audio</span></div>
+        </div>
+
+        <!-- TRACK LANES -->
+        <div class="track-lanes-area" id="trackLanesArea"></div>
+
+        <!-- PLAYHEAD -->
+        <div class="timeline-playhead" id="timelinePlayhead">
+          <div class="playhead-needle-cap" id="playheadNeedleCap" title="Drag playhead"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPORT VIDEO MODAL -->
+  <div class="modal-overlay" id="exportModalOverlay">
+    <div class="export-modal">
+      <div class="modal-header">
+        <h3 class="modal-title">Export Video</h3>
+        <button class="modal-close-btn" id="btnCancelExport">&times;</button>
+      </div>
+
+      <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.5;">
+      Browser WebM exports visuals only. Local FFmpeg MP4 supports one uploaded video and the first uploaded audio clip, without text or sticker overlays.
+      </p>
+
+      <div class="control-row">
+        <span class="control-label">Render Engine</span>
+        <select class="control-select" id="exportEngineSelect">
+          <option value="browser" selected>Browser Timeline Export (WebM)</option>
+          <option value="ffmpeg">Local FFmpeg (single-clip MP4)</option>
+        </select>
+      </div>
+
+      <div class="control-row">
+        <span class="control-label">Resolution</span>
+        <select class="control-select" id="exportResolutionSelect">
+          <option value="1080p">1080p (Full HD)</option>
+          <option value="720p">720p (HD)</option>
+        </select>
+      </div>
+
+      <div class="progress-container" id="exportProgressContainer">
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="exportProgressBarFill"></div>
+        </div>
+        <div class="progress-text">
+          <span id="exportProgressText">Rendering...</span>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
+        <button class="btn-export" id="btnStartExport" style="width: 100%; justify-content: center;">
+          Start Export
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOAD PROJECT MODAL -->
+  <div class="modal-overlay" id="projectModalOverlay">
+    <div class="export-modal">
+      <div class="modal-header">
+        <h3 class="modal-title">Saved Projects</h3>
+        <button class="modal-close-btn" id="btnCancelProjectModal">&times;</button>
+      </div>
+      <div id="projectListContainer" style="display: flex; flex-direction: column; gap: 8px; max-height: 250px; overflow-y: auto;">
+        <div style="color: var(--text-muted); font-size: 12px; text-align: center;">Loading projects...</div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="scripts/app.js"></script>
+</body>
+</html>

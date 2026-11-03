@@ -1,0 +1,340 @@
+/* TIMELINE COMPONENT */
+.timeline-panel {
+  height: 280px;
+  background: var(--bg-darkest);
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+}
+
+/* TIMELINE ACTION BAR */
+.timeline-actions-bar {
+  height: 38px;
+  background: var(--bg-darker);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  z-index: 20;
+}
+
+.timeline-left-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tool-action-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-secondary);
+  height: 28px;
+  padding: 0 10px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.tool-action-btn svg {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+}
+
+.tool-action-btn:hover {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+.tool-action-btn.active {
+  background: var(--bg-card);
+  color: var(--accent-cyan);
+  border-color: var(--accent-cyan);
+}
+.tool-action-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.timeline-right-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.zoom-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+/* TIMELINE TRACKS AREA */
+.timeline-scroll-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-x: auto;
+  overflow-y: auto;
+  position: relative;
+  background: var(--bg-darkest);
+}
+
+/* TIME RULER */
+.timeline-ruler-wrapper {
+  height: 28px;
+  background: var(--bg-darker);
+  border-bottom: 1px solid var(--border-color);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+}
+
+.ruler-header-spacer {
+  width: 140px;
+  flex-shrink: 0;
+  background: var(--bg-darker);
+  border-right: 1px solid var(--border-color);
+  position: sticky;
+  left: 0;
+  z-index: 15;
+}
+
+.timeline-ruler-canvas {
+  flex: 1;
+  height: 100%;
+  cursor: pointer;
+}
+
+/* TRACKS CONTAINER */
+.timeline-body {
+  display: flex;
+  position: relative;
+  min-height: 200px;
+}
+
+/* TRACK HEADERS (LEFT) */
+.track-headers-column {
+  width: 140px;
+  flex-shrink: 0;
+  background: var(--bg-darker);
+  border-right: 1px solid var(--border-color);
+  position: sticky;
+  left: 0;
+  z-index: 12;
+  display: flex;
+  flex-direction: column;
+}
+
+.track-header {
+  height: 48px;
+  border-bottom: 1px solid var(--border-color);
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.track-header-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow: hidden;
+}
+
+.track-icon {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+}
+
+.track-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 70px;
+}
+
+.track-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.track-btn-toggle {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.track-btn-toggle:hover {
+  color: var(--text-primary);
+  background: var(--bg-hover);
+}
+.track-btn-toggle.active {
+  color: var(--accent-red);
+}
+
+/* TRACK LANES (RIGHT) */
+.track-lanes-area {
+  flex: 1;
+  position: relative;
+  min-width: 1200px;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 49px,
+    rgba(255, 255, 255, 0.02) 50px
+  );
+}
+
+.track-lane {
+  height: 48px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* CLIPS IN TIMELINE */
+.timeline-clip {
+  position: absolute;
+  height: 38px;
+  border-radius: 6px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  font-size: 11px;
+  font-weight: 500;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.timeline-clip:hover {
+  border-color: rgba(255,255,255,0.4);
+}
+
+.timeline-clip.selected {
+  border-color: #fff !important;
+  box-shadow: 0 0 0 1.5px #fff, 0 4px 12px rgba(0,0,0,0.6);
+  z-index: 5;
+}
+
+/* TRACK SPECIFIC CLIP STYLING */
+.clip-video {
+  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+  border-color: #3b82f6;
+  color: #eff6ff;
+}
+
+.clip-overlay {
+  background: linear-gradient(135deg, #581c87 0%, #7e22ce 100%);
+  border-color: #a855f7;
+  color: #faf5ff;
+}
+
+.clip-audio {
+  background: linear-gradient(135deg, #064e3b 0%, #059669 100%);
+  border-color: #10b981;
+  color: #ecfdf5;
+}
+
+.clip-text {
+  background: linear-gradient(135deg, #78350f 0%, #d97706 100%);
+  border-color: #f59e0b;
+  color: #fffbeb;
+}
+
+.clip-sticker {
+  background: linear-gradient(135deg, #831843 0%, #db2777 100%);
+  border-color: #ec4899;
+  color: #fdf2f8;
+}
+
+.clip-label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+  pointer-events: none;
+}
+
+/* TRIM HANDLES */
+.trim-handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 10px;
+  background: rgba(255, 255, 255, 0.3);
+  display: none;
+  cursor: ew-resize;
+  z-index: 6;
+}
+
+.timeline-clip.selected .trim-handle {
+  display: block;
+}
+
+.trim-handle.start {
+  left: 0;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+.trim-handle.end {
+  right: 0;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.trim-handle:hover {
+  background: #fff;
+}
+
+/* PLAYHEAD */
+.timeline-playhead {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--accent-red);
+  pointer-events: none;
+  z-index: 30;
+}
+
+.playhead-needle-cap {
+  position: absolute;
+  top: 0;
+  left: -6px;
+  width: 14px;
+  height: 18px;
+  background: var(--accent-red);
+  clip-path: polygon(0% 0%, 100% 0%, 100% 65%, 50% 100%, 0% 65%);
+  cursor: pointer;
+  pointer-events: all;
+  box-shadow: 0 2px 6px rgba(239, 71, 111, 0.5);
+}
